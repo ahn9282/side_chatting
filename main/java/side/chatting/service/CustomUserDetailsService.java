@@ -20,6 +20,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (userData != null) {
             return new CustomUserDetails(userData);
         }
-        return null;
+        throw new UsernameNotFoundException("아이디가 존재하지 않습니다.");
     }
 }

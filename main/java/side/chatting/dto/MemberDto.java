@@ -15,6 +15,9 @@ public class MemberDto {
     private String name;
     private Grade grade;
     private String password;
+    private String profile;
+    private String description;
+    private String email;
 
     public MemberDto(Member member) {
         this.username = member.getUsername();

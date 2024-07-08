@@ -7,7 +7,6 @@ import side.chatting.dto.MemberDto;
 import side.chatting.entity.Auth;
 import side.chatting.entity.Grade;
 import side.chatting.entity.Member;
-import side.chatting.entity.Role;
 import side.chatting.repository.AuthRepository;
 import side.chatting.repository.MemberRepository;
 
@@ -24,7 +23,7 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     @Override
     public MemberDto joinMember(MemberDto form) {
-        Auth auth = authRepository.findByAuth(Role.ROLE_USER);
+        Auth auth = authRepository.findByAuth("ROLE_USER");
         Member newMember = new Member(form.getUsername(), form.getPassword(), form.getName(), Grade.SILVER);
         newMember.addAuth(auth);
         Member saveMember = memberRepository.save(newMember);

@@ -19,9 +19,8 @@ public class Auth extends BaseTime{
     @Column(name="auth_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable=false, unique=true)
-    private Role auth;
+    private String auth;
 
     @OneToMany(mappedBy = "auth", cascade=CascadeType.ALL)
     private List<Member> members = new ArrayList<>();
@@ -29,7 +28,7 @@ public class Auth extends BaseTime{
     public Auth() {
     }
 
-    public Auth(Role auth) {
+    public Auth(String auth) {
         this.auth = auth;
     }
 }

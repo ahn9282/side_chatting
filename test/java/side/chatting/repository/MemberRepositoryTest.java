@@ -2,7 +2,6 @@ package side.chatting.repository;
 
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,9 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import side.chatting.entity.Auth;
 import side.chatting.entity.Member;
-import side.chatting.entity.Role;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -55,7 +51,7 @@ class MemberRepositoryTest {
 
     @Test
     void addedDataTest(){
-        Auth auth = authRepository.findByAuth(Role.ROLE_USER);
+        Auth auth = authRepository.findByAuth("ROLE_USER");
         Member member1 = new Member("testMem", passwordEncoder.encode("1234"), "name1", auth);
         memberRepository.save(member1);
 

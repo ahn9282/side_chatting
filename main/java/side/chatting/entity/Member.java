@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -28,6 +31,18 @@ public class Member extends BaseTime{
 
     @Enumerated(EnumType.STRING)
     private Grade grade;
+
+    private String profile;
+    private String description;
+
+   // @Column(unique = true)
+    private String email;
+
+    @OneToMany(mappedBy = "member")
+    private Set<UserChatRoom> chatRooms = new HashSet<>();
+
+    @OneToMany(mappedBy = "member")
+    private Set<Friend> friends = new HashSet<>();
 
     public Member() {
 

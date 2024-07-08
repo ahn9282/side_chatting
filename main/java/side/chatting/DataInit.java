@@ -6,13 +6,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import side.chatting.entity.Auth;
 import side.chatting.entity.Member;
-import side.chatting.entity.Role;
 import side.chatting.repository.AuthRepository;
 import side.chatting.repository.MemberRepository;
 
-import static side.chatting.entity.Role.*;
-
-@Component
+//@Component
 @RequiredArgsConstructor
 public class DataInit {
 
@@ -27,7 +24,7 @@ public class DataInit {
     }
 
     private void init(){
-        Auth auth = new Auth(ROLE_USER);
+        Auth auth = new Auth("ROLE_USER");
         authRepository.save(auth);
 
         Member member1 = new Member("test1", passwordEncoder.encode("1234"), "userA", auth);

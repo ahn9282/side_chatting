@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,18 +24,23 @@ public class MemberController {
 
     @GetMapping("/")
     public String homeP() {
-        return "login.html";
+        return "index";
     }
 
     @GetMapping("/login")
     public String loginP() {
-        return "login.html";
+        return "login";
     }
 
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<?> loginProcess(LoginForm form) {
+        try{
+
         return null;
+        }catch(UsernameNotFoundException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+        }
     }
 
     @GetMapping("/join")
@@ -57,4 +63,10 @@ public class MemberController {
 
         return new ResponseEntity<>(newMember, HttpStatus.OK);
     }
+    @GetMapping("/user")
+    @ResponseBody
+    public String testAuthentication() {
+        return "user";
+    }
+
 }
