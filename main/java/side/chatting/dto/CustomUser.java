@@ -1,20 +1,22 @@
 package side.chatting.dto;
 
+import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import side.chatting.entity.Member;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
-
-public class CustomUserDetails implements UserDetails {
+@EqualsAndHashCode(of={"username"})
+public class CustomUser implements UserDetails {
 
     private final Member member;
+    private String username;
 
-    public CustomUserDetails(Member member) {
+    public CustomUser(Member member) {
         this.member = member;
+        this.username = member.getUsername();
     }
 
     @Override
@@ -36,7 +38,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getUsername();
+        return username;
     }
 
     @Override

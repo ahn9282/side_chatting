@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import side.chatting.dto.CustomUserDetails;
+import side.chatting.dto.CustomUser;
 import side.chatting.entity.Member;
 import side.chatting.repository.MemberRepository;
 
@@ -18,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member userData = memberRepository.findMemberWithAuth(username);
         if (userData != null) {
-            return new CustomUserDetails(userData);
+            return new CustomUser(userData);
         }
         throw new UsernameNotFoundException("아이디가 존재하지 않습니다.");
     }

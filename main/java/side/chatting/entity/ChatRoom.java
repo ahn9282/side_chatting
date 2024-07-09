@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Getter@Setter
 @Entity
-public class ChatRoom {
+public class ChatRoom extends BaseTime{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

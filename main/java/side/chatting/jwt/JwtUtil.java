@@ -42,17 +42,7 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("category", String.class);
     }
 
-    public String createJwt(String username, String role, Long expireMs) {
-        Claims claims = Jwts.claims();
-        claims.put("username", username);
-        claims.put("role", role);
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expireMs))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
-    }
+
 
     public String createJwt(String category, String username, String role, Long expireMs) {
         return Jwts.builder()

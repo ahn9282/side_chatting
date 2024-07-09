@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -43,12 +44,17 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
 
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer(){
+        return web -> web.ignoring().requestMatchers("/img/**", "/css/**", "/js/**");
+    }//해당 경로 FilterChain 맵핑 제외 Filter를 거치지 않도록
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(e -> e.disable());
+                .csrf(auth -> auth.disable());
         http
                 .httpBasic((auth) -> auth.disable());
         http
@@ -58,7 +64,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/", "/join", "/reissue").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/user").hasRole("USER")
+                        .requestMatchers("/user").authenticated()
                         .anyRequest().authenticated());
 
 
@@ -69,12 +75,12 @@ public class SecurityConfig {
                             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                                 CorsConfiguration corsConfiguration = new CorsConfiguration();
                                 //port
-                                corsConfiguration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                                corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
                                 corsConfiguration.setAllowedMethods(Collections.singletonList("*"));//http 메서드
                                 corsConfiguration.setAllowCredentials(true);
                                 corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));//Header 허용
                                 corsConfiguration.setMaxAge(3600L);//최대 시간
-                                corsConfiguration.setExposedHeaders(Collections.singletonList("Authorization"));//header key 허용
+                                corsConfiguration.setExposedHeaders(Collections.singletonList("access"));//header key 허용
 
                                 return corsConfiguration;
                             }

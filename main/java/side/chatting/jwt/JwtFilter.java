@@ -1,7 +1,6 @@
 package side.chatting.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.persistence.EntityManager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.filter.OncePerRequestFilter;
-import side.chatting.dto.CustomUserDetails;
+import side.chatting.dto.CustomUser;
 import side.chatting.entity.Auth;
 import side.chatting.entity.Member;
 import side.chatting.repository.AuthRepository;
@@ -64,10 +63,10 @@ public class JwtFilter extends OncePerRequestFilter {
         member.setUsername(username);
         Auth auth = authRepository.findByAuth(role);
         member.setAuth(auth);
-        CustomUserDetails customUserDetails = new CustomUserDetails(member);
+        CustomUser customUser = new CustomUser(member);
 
         UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+                new UsernamePasswordAuthenticationToken(customUser, null, customUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request,response);
