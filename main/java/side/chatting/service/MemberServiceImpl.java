@@ -10,6 +10,8 @@ import side.chatting.entity.Member;
 import side.chatting.repository.AuthRepository;
 import side.chatting.repository.MemberRepository;
 
+import java.util.Optional;
+
 
 @Transactional(readOnly = true)
 @Service
@@ -32,20 +34,20 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public Boolean checkDupleUsername(MemberDto form) {
-        Member dupleUsernameMember = memberRepository.findByUsername(form.getUsername());
-        if(dupleUsernameMember != null){
-            return false;
-        }
-        return true;
+        Optional<Member> dupleUsernameMember = memberRepository.findByUsername(form.getUsername());
+        return dupleUsernameMember.isPresent();
     }
 
     @Override
     public Boolean checkDupleName(MemberDto form) {
-        Member dupleUsernameMember = memberRepository.findByName(form.getName());
-        if(dupleUsernameMember != null){
-            return false;
-        }
-        return true;
+        Optional<Member> dupleUsernameMember = memberRepository.findByName(form.getName());
+        return dupleUsernameMember.isPresent();
+    }
+
+    @Override
+    public Boolean checkDupleEmail(String email) {
+        Optional<Member> dupleEmailMember = memberRepository.findByEmail(email);
+        return dupleEmailMember.isPresent();
     }
 
 }

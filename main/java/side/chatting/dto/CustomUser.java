@@ -13,10 +13,22 @@ public class CustomUser implements UserDetails {
 
     private final Member member;
     private String username;
+    private String email;
+    private String name;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getName() {
+        return name;
+    }
 
     public CustomUser(Member member) {
         this.member = member;
         this.username = member.getUsername();
+        this.email = member.getEmail();
+        this.name = member.getName();
     }
 
     @Override

@@ -18,6 +18,7 @@ import side.chatting.jwt.JwtUtil;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -124,12 +125,36 @@ public class LoginTest {
     void testWrongPassword() throws Exception {
         String username = "test1";
         String password = "123442141";
+
         LoginForm form = new LoginForm(username, password);
         String loginForm = objectMapper.writeValueAsString(form);
         mockMvc.perform(post("/login")
                         .content(loginForm)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andExpect(result -> {
+                   String errorMessage = result.getResponse().getContentAsString();
+                    System.out.println("errorMessage = " + errorMessage);
+                });
 
     }
+    @Test
+    void testJwtContent() throws Exception {
+        String username = "test1";
+        String password = "1234";
+        LoginForm form = new LoginForm(username, password);
+        String loginForm = objectMapper.writeValueAsString(form);
+        MockHttpServletResponse response = mockMvc.perform(post("/login")
+                        .content(loginForm)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+        String access = response.getHeader("access");
+        assertThat(jwtUtil.getUsername(access)).isEqualTo("test1");
+        assertThat(jwtUtil.getRole(access)).isEqualTo("ROLE_USER");
+        assertThat(jwtUtil.getEmail(access)).isEqualTo("t1@ss.com");
+        assertThat(jwtUtil.getName(access)).isEqualTo("userA");
+
+
+    }
+
 }

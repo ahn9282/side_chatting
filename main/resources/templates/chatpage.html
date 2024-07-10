@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+    <script>
+        var stompClient = null;
+        var chatRoomId = 1; // Example chatRoomId, replace with actual value
+
+        function connect() {
+            var socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/chat/' + chatRoomId, function (messageOutput) {
+                    showMessage(JSON.parse(messageOutput.body));
+                });
+            });
+        }
+
+        function sendMessage() {
+            var messageContent = document.getElementById("message").value;
+            stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
+                'content': messageContent,
+                'memberId': 1, // Example memberId, replace with actual value
+                'chatRoomId': chatRoomId,
+                'status': 'CHAT' // Example status
+            }));
+        }
+
+        function showMessage(message) {
+            var response = document.getElementById('response');
+            var p = document.createElement('p');
+            p.style.wordWrap = 'break-word';
+            p.appendChild(document.createTextNode(message.memberId + ": " + message.content));
+            response.appendChild(p);
+        }
+
+        window.onload = connect;
+    </script>
+</head>
+<body>
+<div>
+    <input type="text" id="message" placeholder="Type your message here..." />
+    <button onclick="sendMessage()">Send</button>
+</div>
+<div id="response"></div>
+</body>
+</html>

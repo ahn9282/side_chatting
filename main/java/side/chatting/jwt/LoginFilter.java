@@ -14,10 +14,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.transaction.annotation.Transactional;
+import side.chatting.dto.CustomUser;
 import side.chatting.entity.RefreshEntity;
 import side.chatting.repository.RefreshRepository;
+import side.chatting.security.CustomAuthenticationFailureHandler;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -29,13 +33,21 @@ import java.util.Map;
 import static java.time.LocalDateTime.now;
 
 @Slf4j
-@RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final RefreshRepository refreshRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
+
+    public LoginFilter(RefreshRepository refreshRepository, AuthenticationManager authenticationManager, JwtUtil jwtUtil, ObjectMapper objectMapper ) {
+        this.refreshRepository = refreshRepository;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        this.objectMapper = objectMapper;
+
+        this.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler());
+    }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -65,14 +77,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                                             Authentication authentication) throws ServletException {
 
         String username = authentication.getName();
+        CustomUser user = (CustomUser)authentication.getPrincipal();
+        String name = user.getName();
+        String email = user.getEmail();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String access = jwtUtil.createJwt("access", username, role, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
+        String access = jwtUtil.createJwt("access", username, role,name, email, 600000L);
+        String refresh = jwtUtil.createJwt("refresh", username, role,name, email, 86400000L);
 
         addRefreshEntity(username, refresh, 86400000L);
 

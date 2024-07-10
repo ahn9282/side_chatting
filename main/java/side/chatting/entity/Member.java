@@ -3,10 +3,12 @@ package side.chatting.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Slf4j
 @Entity
 @Getter
 @Setter
@@ -41,8 +43,11 @@ public class Member extends BaseTime{
     @OneToMany(mappedBy = "member")
     private Set<UserChatRoom> chatRooms = new HashSet<>();
 
-    @OneToMany(mappedBy = "member")
-    private Set<Friend> friends = new HashSet<>();
+    @ManyToMany
+    @JoinTable(name = "friendship",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id"))
+    private Set<Member> friends = new HashSet<>();
 
     public Member() {
 
@@ -71,5 +76,23 @@ public class Member extends BaseTime{
     public void addAuth(Auth auth) {
         this.setAuth(auth);
         auth.getMembers().add(this);
+    }
+
+    public void addFriend(Member friend) {
+        if (!this.friends.contains(friend)) {
+            this.friends.add(friend);
+        }
+        if (!friend.getFriends().contains(this)) {
+            friend.getFriends().add(this);
+        }
+    }
+
+    public void removeFriend(Member friend) {
+        if (this.friends.contains(friend)) {
+            this.friends.remove(friend);
+        }
+        if (friend.getFriends().contains(this)) {
+            friend.getFriends().remove(this);
+        }
     }
 }

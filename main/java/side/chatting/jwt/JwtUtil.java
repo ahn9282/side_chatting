@@ -25,12 +25,20 @@ public class JwtUtil {
 
     public String getUsername(String token) {
         return Jwts.parserBuilder().setSigningKey(key)
-                .build().parseClaimsJws(token).getBody().get("usernmae", String.class);
+                .build().parseClaimsJws(token).getBody().get("username", String.class);
     }
 
     public String getRole(String token) {
         return Jwts.parserBuilder().setSigningKey(key)
                 .build().parseClaimsJws(token).getBody().get("role", String.class);
+
+    }  public String getName(String token) {
+        return Jwts.parserBuilder().setSigningKey(key)
+                .build().parseClaimsJws(token).getBody().get("name", String.class);
+
+    }  public String getEmail(String token) {
+        return Jwts.parserBuilder().setSigningKey(key)
+                .build().parseClaimsJws(token).getBody().get("email", String.class);
     }
 
     public Boolean isExpired(String token) {
@@ -44,11 +52,13 @@ public class JwtUtil {
 
 
 
-    public String createJwt(String category, String username, String role, Long expireMs) {
+    public String createJwt(String category, String username, String role,String name, String email, Long expireMs) {
         return Jwts.builder()
                 .claim("category", category)
                 .claim("username", username)
                 .claim("role", role)
+                .claim("name", name)
+                .claim("email", email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expireMs))
                 .signWith(key)
