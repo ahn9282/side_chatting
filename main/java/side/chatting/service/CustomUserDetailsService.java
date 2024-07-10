@@ -18,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member userData = memberRepository.findMemberWithAuth(username);
         if (userData != null) {
-            return new CustomUser(userData);
+            return new CustomUser(userData, false);
         }
         throw new UsernameNotFoundException("아이디가 존재하지 않습니다.");
     }

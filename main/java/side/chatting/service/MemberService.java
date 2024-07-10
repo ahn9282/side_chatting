@@ -15,4 +15,6 @@ public interface MemberService {
     Boolean checkDupleUsername(MemberDto form);
 
     Boolean checkDupleName(MemberDto form);
+
+    Boolean checkDupleEmail(String email);
 }

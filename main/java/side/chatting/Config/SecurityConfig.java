@@ -29,6 +29,7 @@ import side.chatting.jwt.JwtUtil;
 import side.chatting.jwt.LoginFilter;
 import side.chatting.repository.AuthRepository;
 import side.chatting.repository.RefreshRepository;
+import side.chatting.security.CustomAuthenticationEntryPoint;
 
 import java.util.Collections;
 
@@ -42,7 +43,7 @@ public class SecurityConfig {
     private final RefreshRepository refreshRepository;
     private final AuthRepository authRepository;
     private final ObjectMapper objectMapper;
-
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
@@ -62,7 +63,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join", "/reissue").permitAll()
+                        .requestMatchers("/login", "/", "/join","/member/email/check**","/chat**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/user").authenticated()
                         .anyRequest().authenticated());
@@ -97,6 +98,9 @@ public class SecurityConfig {
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
 
+        http
+                .exceptionHandling(auth -> auth
+                        .authenticationEntryPoint(authenticationEntryPoint));
         http
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));

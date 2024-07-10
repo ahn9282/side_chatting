@@ -35,12 +35,10 @@ public class MemberController {
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<?> loginProcess(LoginForm form) {
-        try{
+
 
         return null;
-        }catch(UsernameNotFoundException e){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
-        }
+
     }
 
     @GetMapping("/join")

@@ -63,7 +63,7 @@ public class JwtFilter extends OncePerRequestFilter {
         member.setUsername(username);
         Auth auth = authRepository.findByAuth(role);
         member.setAuth(auth);
-        CustomUser customUser = new CustomUser(member);
+        CustomUser customUser = new CustomUser(member, false);
 
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(customUser, null, customUser.getAuthorities());

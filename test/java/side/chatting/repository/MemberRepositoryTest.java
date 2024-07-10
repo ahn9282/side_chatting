@@ -34,7 +34,7 @@ class MemberRepositoryTest {
         em.flush();
         em.clear();
 
-        Member findMember = memberRepository.findByUsername("memberTest");
+        Member findMember = memberRepository.findByUsername("memberTest").get();
 
         log.info("member's pw : {}", findMember.getPassword());
         assertThat(findMember.getUsername()).isEqualTo("memberTest");
@@ -59,7 +59,7 @@ class MemberRepositoryTest {
         em.clear();
 
         System.out.println("===============================================");
-        Member findMember = memberRepository.findByUsername("testMem");
+        Member findMember = memberRepository.findByUsername("testMem").get();
         assertThat(findMember.getAuth().getAuth()).isEqualTo(auth.getAuth());
         assertThat(findMember.getCreatedDate()).isNotNull();
         assertThat(findMember.getUpdatedDate()).isNotNull();
