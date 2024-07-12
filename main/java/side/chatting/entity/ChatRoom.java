@@ -16,7 +16,7 @@ public class ChatRoom extends BaseTime{
 
     private String name;
 
-    @OneToMany(mappedBy = "chatRoom")
+    @OneToMany(mappedBy = "chatRoom",cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<UserChatRoom> members = new HashSet<>();
 
 }

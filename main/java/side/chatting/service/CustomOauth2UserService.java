@@ -22,22 +22,25 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
-public class CustomOauth2UserService extends DefaultOAuth2UserService {
+public class CustomOauth2UserService extends DefaultOAuth2UserService  {
 
     private final MemberRepository memberRepository;
     private final AuthRepository authRepository;
 
+    @Transactional
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException  {
         OAuth2User oauth2User = super.loadUser(userRequest);
 
+        log.info("oauth2user {}", oauth2User);
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         Oauth2Response oauth2Response = null;
 
         if (registrationId.equals("naver")) {
             oauth2Response = new NaverResponse(oauth2User.getAttributes());
         }
+
+        log.info("REsponse {}", oauth2Response);
         String username = oauth2Response.getProvider() + " " + oauth2Response.getProviderId();
         Optional<Member> existData = memberRepository.findByUsername(username);
 

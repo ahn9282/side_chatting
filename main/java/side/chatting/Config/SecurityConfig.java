@@ -30,6 +30,7 @@ import side.chatting.jwt.LoginFilter;
 import side.chatting.repository.AuthRepository;
 import side.chatting.repository.RefreshRepository;
 import side.chatting.security.CustomAuthenticationEntryPoint;
+import side.chatting.security.CustomSuccessHandler;
 
 import java.util.Collections;
 
@@ -44,6 +45,7 @@ public class SecurityConfig {
     private final AuthRepository authRepository;
     private final ObjectMapper objectMapper;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomSuccessHandler customSuccessHandler;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
@@ -62,30 +64,31 @@ public class SecurityConfig {
                 .formLogin(auth -> auth.disable());
 
         http
+                .oauth2Login(auth -> auth
+                        .loginPage("/login")
+                        .successHandler(customSuccessHandler)
+                        .authorizationEndpoint(e -> e.baseUri("/oauth2/authorization")));
+
+        http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join","/member/email/check**","/chat**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/user").authenticated()
-                        .anyRequest().authenticated());
+                        .anyRequest().permitAll());
 
 
         http    //cors : 교차 리소스 공유  설정  securityConfig 랑 WebMvcConfigurer 구현체로 두번 설정해야함
                 .cors(cors -> cors
-                        .configurationSource(new CorsConfigurationSource() {
-                            @Override
-                            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                                CorsConfiguration corsConfiguration = new CorsConfiguration();
-                                //port
-                                corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
-                                corsConfiguration.setAllowedMethods(Collections.singletonList("*"));//http 메서드
-                                corsConfiguration.setAllowCredentials(true);
-                                corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));//Header 허용
-                                corsConfiguration.setMaxAge(3600L);//최대 시간
-                                corsConfiguration.setExposedHeaders(Collections.singletonList("access"));//header key 허용
+                        .configurationSource(request -> {
+                            CorsConfiguration corsConfiguration = new CorsConfiguration();
+                            //port
+                            corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
+                            corsConfiguration.setAllowedMethods(Collections.singletonList("*"));//http 메서드
+                            corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));//Header 허용
+                            corsConfiguration.setExposedHeaders(Collections.singletonList("access"));//header key 허용
+                            corsConfiguration.setAllowCredentials(true);
+                            corsConfiguration.setMaxAge(3600L);//최대 시간
 
-                                return corsConfiguration;
-                            }
-
+                            return corsConfiguration;
                         }));
 
 

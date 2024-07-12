@@ -6,12 +6,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 //CORS 설정 해제 - Servlet 단
 @ConfigurationProperties
-public class CorsMvcConfig implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
-
         corsRegistry.addMapping("/**")
-                .allowedOrigins("*");
+                .allowedOrigins("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders("access")
+                .exposedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600L);
     }
 }

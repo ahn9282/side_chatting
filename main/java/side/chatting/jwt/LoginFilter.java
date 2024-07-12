@@ -94,7 +94,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setHeader("access", access);
         response.addCookie(createRepoCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
-
+        log.info("response Header {}", response.getHeaders("access"));
     }
 
     //로그인 실패 시 실행하는 메서드

@@ -1,13 +1,21 @@
 package side.chatting.dto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
-@RequiredArgsConstructor
+@ToString
+@Slf4j
 public class NaverResponse implements Oauth2Response {
 
     private final Map<String, Object> attribute;
+
+    public NaverResponse(Map<String, Object> attribute) {
+        this.attribute = (Map<String, Object>) attribute.get("response");
+    }
+
 
     @Override
     public String getProvider() {
@@ -26,6 +34,6 @@ public class NaverResponse implements Oauth2Response {
 
     @Override
     public String getName() {
-        return attribute.get("name").toString();
+        return attribute.get("nickname").toString();
     }
 }

@@ -10,10 +10,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.GenericFilterBean;
 import side.chatting.repository.RefreshRepository;
 
 import java.io.IOException;
+@Slf4j
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
 
@@ -21,14 +23,16 @@ public class CustomLogoutFilter extends GenericFilterBean {
     private final RefreshRepository refreshRepository;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
+            throws IOException, ServletException {
         doFilter((HttpServletRequest) request, (HttpServletResponse) response, filterChain);
     }
 
 
-    private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    private void doFilter(HttpServletRequest request, HttpServletResponse response,
+                          FilterChain filterChain) throws IOException, ServletException {
 
-        //path and method verify
+        //uri 검증
         String requestUri = request.getRequestURI();
         if (!requestUri.matches("^\\/logout$")) {
 
@@ -37,7 +41,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         }
         String requestMethod = request.getMethod();
         if (!requestMethod.equals("POST")) {
-
+            log.info("post아님");
             filterChain.doFilter(request, response);
             return;
         }
@@ -55,7 +59,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         //refresh null check
         if (refresh == null) {
-
+            log.info("REFRESH IS NULL");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
@@ -64,8 +68,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
         try {
             jwtUtil.isExpired(refresh);
         } catch (ExpiredJwtException e) {
+            log.info("REFRESH 만료");
 
-            //response status code
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
@@ -74,7 +78,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         String category = jwtUtil.getCategory(refresh);
         if (!category.equals("refresh")) {
 
-            //response status code
+            log.info("CATEGORY 가 REFRESH 아님");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
@@ -83,7 +87,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         Boolean isExist = refreshRepository.existsByRefresh(refresh);
         if (!isExist) {
 
-            //response status code
+            log.info("db에 refresh 존재 x");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
@@ -99,5 +103,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         response.addCookie(cookie);
         response.setStatus(HttpServletResponse.SC_OK);
+
+        response.sendRedirect("http://localhost:9282/");
     }
 }

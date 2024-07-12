@@ -4,12 +4,14 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import side.chatting.entity.Auth;
 import side.chatting.entity.Member;
 import side.chatting.repository.AuthRepository;
 import side.chatting.repository.MemberRepository;
 
 //@Component
+@Transactional
 @RequiredArgsConstructor
 public class DataInit {
 
@@ -24,6 +26,8 @@ public class DataInit {
     }
 
     private void init(){
+        memberRepository.deleteAll();
+        authRepository.deleteAll();
         Auth auth = new Auth("ROLE_USER");
         authRepository.save(auth);
 

@@ -40,6 +40,9 @@
             background-color: #5f646c; /* 버튼 호버 시 배경색 */
             border-color: #5f646c; /* 버튼 호버 시 테두리 색상 */
         }
+        #logout_btn{
+        background-color:#999;
+        }
     </style>
 </head>
 <body>
@@ -47,6 +50,9 @@
     <div class="card text-center">
         <h2 class="card-title mb-4">Welcome to Chat App</h2>
         <button id="gologinbtn" class="btn btn-primary btn-lg">Login</button>
+        <form action="/logout" method="post">
+            <button type="submit" class="btn" id="logout_btn">logout</button>
+        </form>
     </div>
 </div>
 

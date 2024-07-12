@@ -21,16 +21,14 @@ public class Member extends BaseTime{
     @Column(name = "member_id")
     private Long id;
 
-    @Column(unique = true)
     private String username;
 
     private String password;
 
-    @Column(unique = true)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "auth_id")
+    @JoinColumn(name="auth_id")
     private Auth auth;
 
     @Enumerated(EnumType.STRING)
@@ -42,7 +40,6 @@ public class Member extends BaseTime{
     private String profile;
     private String description;
 
-    @Column(unique = true)
     private String email;
 
     @OneToMany(mappedBy = "member")
