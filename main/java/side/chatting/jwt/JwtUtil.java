@@ -15,6 +15,10 @@ import java.util.Date;
 //로인 실행 로직 토큰 발급, 인코딩
 @Component
 public class JwtUtil {
+    public final String COOKIE_REFRESH = "refresh";
+    public final String HEADER_STRING = "access";
+    public final Long REFRESH_EXPIRATION = 864000000L;
+    public final Long ACCESS_EXPIRATION = 600000L;
 
     private Key key;
 
@@ -48,7 +52,7 @@ public class JwtUtil {
 
 
 
-    public String createJwt(String category, String username, String role,String name, String email, Long expireMs) {
+    public String createJwt(String category, String username, String role,String name, Long expireMs) {
         return Jwts.builder()
                 .claim("category", category)
                 .claim("username", username)

@@ -1,10 +1,7 @@
 package side.chatting.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +15,7 @@ public class RefreshEntity {
     private Long id;
 
     private String username;
+    @Column(length = 1000)
     private String refresh;
     private String expiration;
 }

@@ -50,8 +50,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String email = customUser.getEmail();
         String name = customUser.getName();
 
-        String refresh = jwtUtil.createJwt("refresh",email, role,name, email,60 * 60 * 60L);
-        String access = jwtUtil.createJwt("access",email, role,name, email,60 * 60 * 60L);
+        String access = jwtUtil.createJwt(jwtUtil.HEADER_STRING, username, role, name, jwtUtil.ACCESS_EXPIRATION);
+        String refresh = jwtUtil.createJwt(jwtUtil.COOKIE_REFRESH, username, role, name, jwtUtil.REFRESH_EXPIRATION);
 
         addRefreshEntity(username, refresh, 86400000L);
 
@@ -62,22 +62,24 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.sendRedirect("http://localhost:9282/");
 
     }
+
     @Transactional
     private void addRefreshEntity(String username, String refresh, Long expireMs) {
         LocalDateTime date = now().plus(expireMs, ChronoUnit.MILLIS);
 
-        RefreshEntity refreshEntity = new RefreshEntity();
-        refreshEntity.setUsername(username);
-        refreshEntity.setRefresh(refresh);
-        refreshEntity.setExpiration(date.toString());
-        log.info("refresh {}{}{}", refreshEntity.getExpiration(), refreshEntity.getId(), refreshEntity.getUsername());
-
         Optional<RefreshEntity> exist = refreshRepository.findByUsername(username);
-        if(exist.isEmpty()){
+        if (exist.isEmpty()) {
 
-        refreshRepository.save(refreshEntity);
-        }else{
-            exist.get().setExpiration(refreshEntity.getExpiration());
+            RefreshEntity refreshEntity = new RefreshEntity();
+            refreshEntity.setUsername(username);
+            refreshEntity.setRefresh(refresh);
+            refreshEntity.setExpiration(date.toString());
+            refreshRepository.save(refreshEntity);
+        } else {
+            RefreshEntity refreshEntity = exist.get();
+            refreshEntity.setRefresh(refresh);
+            refreshEntity.setExpiration(date.toString());
+            refreshRepository.save(refreshEntity);
         }
     }
 
@@ -85,7 +87,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(24 * 60 * 60);
         cookie.setHttpOnly(true);
-                cookie.setPath("/");
+        cookie.setPath("/");
 
         return cookie;
     }

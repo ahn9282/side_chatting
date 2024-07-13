@@ -32,7 +32,6 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService  {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException  {
         OAuth2User oauth2User = super.loadUser(userRequest);
 
-        log.info("oauth2user {}", oauth2User);
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         Oauth2Response oauth2Response = null;
 
@@ -40,7 +39,6 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService  {
             oauth2Response = new NaverResponse(oauth2User.getAttributes());
         }
 
-        log.info("REsponse {}", oauth2Response);
         String username = oauth2Response.getProvider() + " " + oauth2Response.getProviderId();
         Optional<Member> existData = memberRepository.findByUsername(username);
 

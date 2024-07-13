@@ -3,6 +3,7 @@ package side.chatting.jwt;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -36,16 +37,6 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        try{
-            jwtUtil.isExpired(accessToken);
-        }catch(ExpiredJwtException e){
-            log.info("jwtUtil.isExpired(accessToken);");
-            PrintWriter writer = response.getWriter();
-            writer.print("access : token expired");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
         String category = jwtUtil.getCategory(accessToken);
 
         if (!category.equals("access")) {
@@ -56,19 +47,51 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
+        try{
+            jwtUtil.isExpired(accessToken);
+        }catch(ExpiredJwtException e){
+            String refresh = null;
+            Cookie[] cookies = request.getCookies();
+            for (Cookie cookie : cookies) {
+
+                if (cookie.getName().equals("refresh")) {
+
+                    refresh = cookie.getValue();
+                }
+            }
+            if (refresh == null) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+            try{
+                jwtUtil.isExpired(refresh);
+            }catch(ExpiredJwtException  e2){
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
+        }
+
+
+
         String username = jwtUtil.getUsername(accessToken);
         String role = jwtUtil.getRole(accessToken);
+        String name = jwtUtil.getName(accessToken);
+
+      Auth auth = new Auth();
+      auth.setAuth(role);
 
         Member member = new Member();
         member.setUsername(username);
-        Auth auth = authRepository.findByAuth(role);
         member.setAuth(auth);
+        member.setName(name);
+
         CustomUser customUser = new CustomUser(member, false);
 
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(customUser, null, customUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
-
+        response.setHeader(jwtUtil.HEADER_STRING, accessToken);
         filterChain.doFilter(request,response);
     }
 }

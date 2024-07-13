@@ -151,10 +151,27 @@ public class LoginTest {
         String access = response.getHeader("access");
         assertThat(jwtUtil.getUsername(access)).isEqualTo("test1");
         assertThat(jwtUtil.getRole(access)).isEqualTo("ROLE_USER");
-        assertThat(jwtUtil.getEmail(access)).isEqualTo("t1@ss.com");
         assertThat(jwtUtil.getName(access)).isEqualTo("userA");
 
 
     }
+
+    @Test
+    void testCheckHeaderAccess() throws Exception {
+        String username = "test1";
+        String password = "1234";
+        LoginForm form = new LoginForm(username, password);
+        String loginForm = objectMapper.writeValueAsString(form);
+        MockHttpServletResponse response = mockMvc.perform(post("/login")
+                        .content(loginForm)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+
+        String access = response.getHeader(jwtUtil.HEADER_STRING);
+        assertThat(jwtUtil.getUsername(access)).isEqualTo("test1");
+        assertThat(access).isNotNull();
+    }
+
 
 }

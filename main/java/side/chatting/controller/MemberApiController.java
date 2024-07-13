@@ -55,5 +55,7 @@ public class MemberApiController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 에러");
         }
     }
+
+
     
 }

@@ -32,6 +32,7 @@ import side.chatting.repository.RefreshRepository;
 import side.chatting.security.CustomAuthenticationEntryPoint;
 import side.chatting.security.CustomSuccessHandler;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -81,12 +82,13 @@ public class SecurityConfig {
                         .configurationSource(request -> {
                             CorsConfiguration corsConfiguration = new CorsConfiguration();
                             //port
-                            corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
+                            corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000","http://localhost:9282/"));
                             corsConfiguration.setAllowedMethods(Collections.singletonList("*"));//http 메서드
                             corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));//Header 허용
-                            corsConfiguration.setExposedHeaders(Collections.singletonList("access"));//header key 허용
+                            corsConfiguration.setExposedHeaders(Collections.singletonList("*"));//header key 허용
                             corsConfiguration.setAllowCredentials(true);
                             corsConfiguration.setMaxAge(3600L);//최대 시간
+                            corsConfiguration.setExposedHeaders(Collections.singletonList("access"));//header key 허용
 
                             return corsConfiguration;
                         }));

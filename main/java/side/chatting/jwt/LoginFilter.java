@@ -29,6 +29,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 @Transactional
@@ -58,8 +59,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             Map<String, String> credentials = objectMapper.readValue(request.getInputStream(), Map.class);
             String username = credentials.get("username");
             String password = credentials.get("password");
-            log.info("username = {}", username);
-            log.info("password = {}", password);
 
             authRequest = new UsernamePasswordAuthenticationToken(username, password);
         } catch (IOException e) {
@@ -86,15 +85,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String access = jwtUtil.createJwt("access", username, role,name, email, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", username, role,name, email, 86400000L);
+        String access = jwtUtil.createJwt(jwtUtil.HEADER_STRING, username, role,name, jwtUtil.ACCESS_EXPIRATION);
+        String refresh = jwtUtil.createJwt(jwtUtil.COOKIE_REFRESH, username, role,name, jwtUtil.REFRESH_EXPIRATION);
 
-        addRefreshEntity(username, refresh, 86400000L);
+        addRefreshEntity(username, refresh, jwtUtil.REFRESH_EXPIRATION);
 
-        response.setHeader("access", access);
-        response.addCookie(createRepoCookie("refresh", refresh));
+        response.addHeader(jwtUtil.HEADER_STRING, access);
+        response.addCookie(createRepoCookie(jwtUtil.COOKIE_REFRESH, refresh));
         response.setStatus(HttpStatus.OK.value());
-        log.info("response Header {}", response.getHeaders("access"));
+        log.info("response Header {}", response.getHeaders(jwtUtil.HEADER_STRING));
     }
 
     //로그인 실패 시 실행하는 메서드
@@ -109,12 +108,20 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private void addRefreshEntity(String username, String refresh, Long expireMs) {
         LocalDateTime date = now().plus(expireMs, ChronoUnit.MILLIS);
 
-        RefreshEntity refreshEntity = new RefreshEntity();
-        refreshEntity.setUsername(username);
-        refreshEntity.setRefresh(refresh);
-        refreshEntity.setExpiration(date.toString());
+        Optional<RefreshEntity> exist = refreshRepository.findByUsername(username);
+        if (exist.isEmpty()) {
 
-        refreshRepository.save(refreshEntity);
+            RefreshEntity refreshEntity = new RefreshEntity();
+            refreshEntity.setUsername(username);
+            refreshEntity.setRefresh(refresh);
+            refreshEntity.setExpiration(date.toString());
+            refreshRepository.save(refreshEntity);
+        } else {
+            RefreshEntity refreshEntity = exist.get();
+            refreshEntity.setRefresh(refresh);
+            refreshEntity.setExpiration(date.toString());
+            refreshRepository.save(refreshEntity);
+        }
     }
 
     private Cookie createRepoCookie(String key, String value) {

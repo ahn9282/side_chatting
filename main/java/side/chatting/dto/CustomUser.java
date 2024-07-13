@@ -18,6 +18,7 @@ public class CustomUser implements UserDetails, OAuth2User {
     private String email;
     private String name;
     private boolean isOauth;
+    private String role;
 
     public String getEmail() {
         return email;
@@ -30,9 +31,9 @@ public class CustomUser implements UserDetails, OAuth2User {
     public CustomUser(Member member, boolean isOauth2) {
         this.member = member;
         this.username = member.getUsername();
-        this.email = member.getEmail();
         this.name = member.getName();
         this.isOauth = isOauth2;
+        this.role = member.getAuth().getAuth();
     }
 
 
@@ -53,7 +54,7 @@ public class CustomUser implements UserDetails, OAuth2User {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return "ROLE_USER";
+                return role;
             }
         });
         return collection;
