@@ -34,16 +34,20 @@ public class Member extends BaseTime{
     @Enumerated(EnumType.STRING)
     private Grade grade;
 
-    @OneToMany(mappedBy = "sender")
-    private List<Message> messages = new ArrayList<>();
 
     private String profile;
     private String description;
 
     private String email;
 
-    @OneToMany(mappedBy = "member")
-    private Set<UserChatRoom> chatRooms = new HashSet<>();
+    @ManyToMany
+    @JoinTable(
+            name = "member_chatroom",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "chatroom_id")
+    )
+    private Set<ChatRoom> chatRooms;
+
 
     @ManyToMany
     @JoinTable(name = "friendship",
@@ -102,4 +106,7 @@ public class Member extends BaseTime{
             friend.getFriends().remove(this);
         }
     }
-}
+    public void createChatroomForMember(Member member, ChatRoom chatroom) {
+        member.getChatRooms().add(chatroom);
+        chatroom.getMembers().add(member);
+    }}

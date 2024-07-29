@@ -10,7 +10,7 @@ import side.chatting.entity.Member;
 import side.chatting.repository.AuthRepository;
 import side.chatting.repository.MemberRepository;
 
-//@Component
+@Component
 @Transactional
 @RequiredArgsConstructor
 public class DataInit {

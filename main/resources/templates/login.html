@@ -104,8 +104,8 @@
 
                 let access = xhr.getResponseHeader('access');
 
-               // 쿠키에 access 값을 저장
-        document.cookie = 'access=' + access + '; SameSite=Lax; Secure';
+               // 세션 스토리지에 access 값을 저장
+        sessionStorage.setItem('access', access);
 
         // 페이지 이동
         window.location.href = '/'; // 성공 페이지로 이동

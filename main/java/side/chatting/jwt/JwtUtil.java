@@ -46,11 +46,10 @@ public class JwtUtil {
                 .parseClaimsJws(token).getBody().getExpiration().before(new Date());
     }
 
+
     public String getCategory(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("category", String.class);
     }
-
-
 
     public String createJwt(String category, String username, String role,String name, Long expireMs) {
         return Jwts.builder()

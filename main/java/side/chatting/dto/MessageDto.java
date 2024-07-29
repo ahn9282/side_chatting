@@ -1,12 +1,13 @@
 package side.chatting.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import side.chatting.entity.MessageStatus;
 
 import java.time.LocalDateTime;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,6 +17,5 @@ public class MessageDto {
     private Long chatRoomId;
     private String content;
     private Long memberId;
-    private MessageStatus status;
 
 }
