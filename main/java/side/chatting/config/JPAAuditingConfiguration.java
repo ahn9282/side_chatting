@@ -1,4 +1,4 @@
-package side.chatting.Config;
+package side.chatting.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

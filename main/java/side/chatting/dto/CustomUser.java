@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import side.chatting.entity.Member;
+import side.chatting.entity.Role;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +19,7 @@ public class CustomUser implements UserDetails, OAuth2User {
     private String email;
     private String name;
     private boolean isOauth;
-    private String role;
+    private Role role;
 
     public String getEmail() {
         return email;
@@ -54,7 +55,7 @@ public class CustomUser implements UserDetails, OAuth2User {
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return role;
+                return role.getAuth();
             }
         });
         return collection;

@@ -1,28 +1,21 @@
-package side.chatting.Config;
+package side.chatting.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.querydsl.core.annotations.Config;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import side.chatting.jwt.CustomLogoutFilter;
 import side.chatting.jwt.JwtFilter;
 import side.chatting.jwt.JwtUtil;
@@ -82,7 +75,7 @@ public class SecurityConfig {
                         .configurationSource(request -> {
                             CorsConfiguration corsConfiguration = new CorsConfiguration();
                             //port
-                            corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000","http://localhost:9282/"));
+                            corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000","http://localhost:9282","http://localhost:63342"));
                             corsConfiguration.setAllowedMethods(Collections.singletonList("*"));//http 메서드
                             corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));//Header 허용
                             corsConfiguration.setExposedHeaders(Collections.singletonList("*"));//header key 허용

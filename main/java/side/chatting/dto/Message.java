@@ -11,11 +11,12 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageDto {
+public class Message {
     private Long id;
     private LocalDateTime createdDate;
     private Long chatRoomId;
     private String content;
-    private Long memberId;
+    private Long senderId;
+    private long readCount;
 
 }

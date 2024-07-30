@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Indexed;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,6 +26,7 @@ public class Member extends BaseTime{
 
     private String password;
 
+
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -39,6 +41,9 @@ public class Member extends BaseTime{
     private String description;
 
     private String email;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MessageEntity> messages = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(

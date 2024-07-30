@@ -15,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import side.chatting.dto.CustomUser;
 import side.chatting.entity.Auth;
 import side.chatting.entity.Member;
+import side.chatting.entity.Role;
 import side.chatting.repository.AuthRepository;
 
 import java.io.IOException;
@@ -78,7 +79,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String name = jwtUtil.getName(accessToken);
 
       Auth auth = new Auth();
-      auth.setAuth(role);
+      auth.setAuth(Role.USER);
 
         Member member = new Member();
         member.setUsername(username);

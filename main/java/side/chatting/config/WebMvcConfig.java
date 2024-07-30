@@ -1,4 +1,4 @@
-package side.chatting.Config;
+package side.chatting.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -11,7 +11,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000","http://localhost:9282/")
+                .allowedOrigins("http://localhost:3000","http://localhost:9282","http://localhost:63342")
                 .allowedMethods("*")
                 .allowedHeaders("*")
                 .exposedHeaders("access")
