@@ -14,6 +14,7 @@ import side.chatting.dto.Oauth2Response;
 import side.chatting.dto.UserDto;
 import side.chatting.entity.Auth;
 import side.chatting.entity.Member;
+import side.chatting.entity.Role;
 import side.chatting.repository.AuthRepository;
 import side.chatting.repository.MemberRepository;
 
@@ -47,7 +48,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService  {
         if(existData.isEmpty()){
 
             Member member = new Member(username, oauth2Response.getName());
-            Auth auth = authRepository.findByAuth("ROLE_USER");
+            Auth auth = authRepository.findByAuth(Role.USER);
             member.setAuth(auth);
             member.setEmail(oauth2Response.getEmail());
             memberRepository.save(member);

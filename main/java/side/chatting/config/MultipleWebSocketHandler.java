@@ -40,7 +40,7 @@ public class MultipleWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         // 클라이언트와의 연결이 설정되었을 때 호출
         sessions.add(session);
-        log.info("Connect Client  id : {}", session.getId());
+        log.info("연결 Client  id : {}", session.getId());
     }
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {

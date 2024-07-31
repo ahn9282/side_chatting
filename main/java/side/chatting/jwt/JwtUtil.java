@@ -51,7 +51,7 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("category", String.class);
     }
 
-    public String createJwt(String category, String username, String role,String name, Long expireMs) {
+        public String createJwt(String category, String username, String role,String name, Long expireMs) {
         return Jwts.builder()
                 .claim("category", category)
                 .claim("username", username)

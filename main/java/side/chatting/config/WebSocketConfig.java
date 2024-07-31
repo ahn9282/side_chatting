@@ -14,8 +14,6 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer  {
 
 
-    private final MultipleWebSocketHandler multipleWebSocketHandler;
-
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/chat-stomp")//stomp 엔드포인트 설정

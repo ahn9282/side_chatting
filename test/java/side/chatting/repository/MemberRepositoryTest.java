@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import side.chatting.entity.Auth;
 import side.chatting.entity.Member;
+import side.chatting.entity.Role;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -51,7 +52,7 @@ class MemberRepositoryTest {
 
     @Test
     void addedDataTest(){
-        Auth auth = authRepository.findByAuth("ROLE_USER");
+        Auth auth = authRepository.findByAuth(Role.USER);
         Member member1 = new Member("testMem", passwordEncoder.encode("1234"), "name1", auth);
         memberRepository.save(member1);
 

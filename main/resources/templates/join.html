@@ -2,9 +2,147 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>회원 가입</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        .container {
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-control-feedback {
+            font-size: 0.875em;
+            color: red;
+        }
+        .form-group > div> input,.form-group > input{
+        width:300px;
+        }
+        #join_title{
+        width:100%;
+        background-color:#00BFFF;
+        height:75px;
+        }
+        #btn_page_move > button{
+        width:8em;
+        height:2.5em;
+        }
+
+    </style>
 </head>
 <body>
+    <h2 id="join_title" class="d-flex align-items-center mb-5"><span style="margin-left:15%;color:white;font-weight:bold;">회원 가입</span></h2>
+<div class="container">
+    <form id="signupForm">
+        <div class="form-group">
+            <label for="username">아이디:</label>
+            <div class="d-flex">
+                <input type="text" id="username" class="form-control" placeholder="아이디 입력" required>
+                <button type="button" class="btn btn-primary ms-2" style="width:100px;" onclick="checkUsername()">중복 확인</button>
+            </div>
+            <small id="usernameFeedback" class="form-control-feedback"></small>
+        </div>
 
+        <div class="form-group">
+            <label for="password">비밀번호:</label>
+            <input type="password" id="password" class="form-control" placeholder="비밀번호 입력" required>
+        </div>
+
+        <div class="form-group">
+            <label for="confirm_password">비밀번호 확인:</label>
+            <input type="password" id="confirm_password" class="form-control" placeholder="비밀번호 확인" required>
+            <small id="passwordFeedback" class="form-control-feedback"></small>
+        </div>
+
+        <div class="form-group">
+            <label for="nickname">닉네임:</label>
+            <input type="text" id="nickname" class="form-control" placeholder="닉네임 입력" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">이메일:</label>
+            <div class="d-flex">
+                <input type="email" id="email" class="form-control" placeholder="이메일 입력" required>
+                <button type="button" class="btn btn-primary ms-2"  style="width:100px;" onclick="checkEmail()">중복 확인</button>
+            </div>
+            <small id="emailFeedback" class="form-control-feedback"></small>
+        </div>
+
+        <div class="form-group">
+            <label for="verification_code">인증번호:</label>
+            <div class="d-flex">
+                <input type="text" id="verification_code" class="form-control" placeholder="인증번호 입력" required>
+                <button type="button" class="btn btn-primary ms-2" style="width:100px;"  onclick="sendVerificationCode()">인증 버튼</button>
+            </div>
+            <small id="verificationFeedback" class="form-control-feedback"></small>
+        </div>
+
+
+    <div id="btn_page_move" class="d-flex flex-raw justify-content-center " style="margin:1rem;">
+
+        <button type="submit" class="btn btn-success m-2">회원 가입</button>
+        <button type="button" class="btn btn-dark m-2" onclick="cancel()">취소</button>
+    </div>
+    </form>
+</div>
+
+<script>
+    function checkUsername() {
+        var username = document.getElementById('username').value;
+        // 서버에서 아이디 중복 확인 로직 호출
+        console.log('Checking username: ' + username);
+        // 여기에 실제 중복 확인 로직을 추가하세요.
+    }
+
+    function checkEmail() {
+        var email = document.getElementById('email').value;
+        // 서버에서 이메일 중복 확인 로직 호출
+        console.log('Checking email: ' + email);
+        // 여기에 실제 중복 확인 로직을 추가하세요.
+    }
+
+    function sendVerificationCode() {
+        var email = document.getElementById('email').value;
+        // 서버에서 인증 코드 전송 로직 호출
+        console.log('Sending verification code to: ' + email);
+        // 여기에 실제 인증 코드 전송 로직을 추가하세요.
+    }
+
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        // 폼 제출 처리 로직
+        console.log('Form submitted');
+        // 여기에 실제 폼 제출 로직을 추가하세요.
+    });
+
+    document.getElementById('password').addEventListener('input', function() {
+        validatePassword();
+    });
+
+    document.getElementById('confirm_password').addEventListener('input', function() {
+        validatePassword();
+    });
+
+    function validatePassword() {
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirm_password').value;
+        var feedback = document.getElementById('passwordFeedback');
+
+        if (password !== confirmPassword) {
+            feedback.textContent = '비밀번호가 일치하지 않습니다.';
+        } else {
+            feedback.textContent = '';
+        }
+    }
+    let cancel = () =? {
+    window.location.href="/";
+    }
+</script>
 </body>
 </html>

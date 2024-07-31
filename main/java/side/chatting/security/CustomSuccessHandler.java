@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,9 +38,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+                                        Authentication authentication) throws IOException {
 
-        log.info("커스텀 성공 핸들러 실행");
         CustomUser customUser = (CustomUser) authentication.getPrincipal();
 
         String username = customUser.getUsername();
@@ -55,7 +55,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         addRefreshEntity(username, refresh, 86400000L);
 
-        response.setHeader("access", access);
+        HttpSession session = request.getSession();
+        session.setAttribute("access", access);
         response.addCookie(createRepoCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
 

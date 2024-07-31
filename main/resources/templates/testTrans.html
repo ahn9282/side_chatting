@@ -25,7 +25,10 @@
  });
 
  function sendMessage() {
-     stompClient.send("/publish/sendMessage", {}, JSON.stringify({'chatRoomId': 1, 'content': 'Hello Kafka!'}));
+     stompClient.send("/publish/sendMessage", {},
+      JSON.stringify({ createdDate: new Date().toISOString(),  chatRoomId: 1,
+    content: "Hello Kafka!",  senderId: 123,  readCount: 1 })
+     );
  }
 
  $("#test").on('click', function() {

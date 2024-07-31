@@ -66,6 +66,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             throw new RuntimeException(e);
         }
         setDetails(request, authRequest);
+        setDetails(request, authRequest);
 
         return this.authenticationManager.authenticate(authRequest);
     }

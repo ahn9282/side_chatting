@@ -41,9 +41,9 @@ public class MemberController {
 
     }
 
-    @GetMapping("/join")
+    @GetMapping("/sign_on")
     public String joinP() {
-        return null;
+        return "join";
     }
 
     @PostMapping("/join")
@@ -65,6 +65,14 @@ public class MemberController {
     @ResponseBody
     public String testAuthentication() {
         return "user";
+    }
+
+
+
+    @GetMapping("/test")
+    public String as() {
+
+        return "testTrans";
     }
 
 }
