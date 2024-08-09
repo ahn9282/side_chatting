@@ -16,17 +16,26 @@
         .container {
             height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            margin:0;
+            padding:0;
+            min-width:100%;
+        }
+        .container > div{
+            width:100%;
+            border: 1px solid black;
+             display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            background-color:skyblue;
         }
         .card {
             background-color: #ffffff;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             padding: 30px;
-            max-width: 400px;
-            width: 100%;
+            height:100vh;
         }
         .card-title {
             color: #333;
@@ -56,18 +65,46 @@
         #logout_btn:hover {
             background-color: #c0392b;
         }
+
+        #main_content1{
+        height:12vh;
+        }
+        #main_content2{
+        height:60vh;
+        }
+        #main_content3{
+        height:28vh;
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="card text-center">
-        <h2 class="card-title mb-4">Welcome to Chat App</h2>
+
+    <div id="main_content1">
+        <div>1-1</div>
+
+    </div>
+
+    <div id="main_content2" >
+        <div>2-1</div>
+        <div>2-2</div>
+    </div>
+
+    <div class="card text-center " id="main_content3">
+        <div id="user_cont">
+
+        <h2 class="card-title">Welcome to Chat App</h2>
         <button id="gologinbtn" class="btn btn-primary btn-lg">Login</button>
         <form action="/logout" method="post">
-            <button type="submit" class="btn btn-secondary btn-lg mt-3" id="logout_btn">Logout</button>
+            <button type="submit" class="btn btn-secondary btn-lg" id="logout_btn">Logout</button>
         </form>
-        <button id="link_user" class="btn btn-primary btn-lg mt-3">User Info</button>
+        <button id="link_user" class="btn btn-primary btn-lg">User Info</button>
+        </div>
+    <div>
+        3-2
     </div>
+    </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

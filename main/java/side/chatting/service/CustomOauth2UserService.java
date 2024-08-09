@@ -41,7 +41,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService  {
         }
 
         String username = oauth2Response.getProvider() + " " + oauth2Response.getProviderId();
-        Optional<Member> existData = memberRepository.findByUsername(username);
+        Optional<Member> existData = memberRepository.findMemberWithAuth(username);
 
         UserDto userDto = new UserDto();
 

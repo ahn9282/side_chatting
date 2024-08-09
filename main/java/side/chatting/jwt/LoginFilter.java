@@ -109,6 +109,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private void addRefreshEntity(String username, String refresh, Long expireMs) {
         LocalDateTime date = now().plus(expireMs, ChronoUnit.MILLIS);
 
+        log.info("로그인 필터");
         Optional<RefreshEntity> exist = refreshRepository.findByUsername(username);
         if (exist.isEmpty()) {
 

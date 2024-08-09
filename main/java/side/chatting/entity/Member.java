@@ -45,20 +45,15 @@ public class Member extends BaseTime{
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MessageEntity> messages = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "member_chatroom",
-            joinColumns = @JoinColumn(name = "member_id"),
-            inverseJoinColumns = @JoinColumn(name = "chatroom_id")
-    )
-    private Set<ChatRoom> chatRooms;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ChatMember> chatMemberSet = new HashSet<>();
 
 
-    @ManyToMany
-    @JoinTable(name = "friendship",
-            joinColumns = @JoinColumn(name = "member_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id"))
-    private Set<Member> friends = new HashSet<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FriendShip> friendsAsMember = new HashSet<>();
+
+    @OneToMany(mappedBy = "friend", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FriendShip> friendsAsFriend = new HashSet<>();
 
     public Member() {
 
@@ -77,11 +72,12 @@ public class Member extends BaseTime{
         this.auth = auth;
     }
 
-    public Member(String username, String password, String name, Grade grade) {
+    public Member(String username, String password, String name, Grade grade, String email) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.grade = grade;
+        this.email = email;
     }
 
     public Member(String username, String name) {
@@ -94,24 +90,8 @@ public class Member extends BaseTime{
         auth.getMembers().add(this);
     }
 
-    public void addFriend(Member friend) {
-        if (!this.friends.contains(friend)) {
-            this.friends.add(friend);
-        }
-        if (!friend.getFriends().contains(this)) {
-            friend.getFriends().add(this);
-        }
-    }
 
-    public void removeFriend(Member friend) {
-        if (this.friends.contains(friend)) {
-            this.friends.remove(friend);
-        }
-        if (friend.getFriends().contains(this)) {
-            friend.getFriends().remove(this);
-        }
+    public void log() {
+        log.info("Member [ username : {}, name : {}, email : {}]", username, name, email);
     }
-    public void createChatroomForMember(Member member, ChatRoom chatroom) {
-        member.getChatRooms().add(chatroom);
-        chatroom.getMembers().add(member);
-    }}
+}

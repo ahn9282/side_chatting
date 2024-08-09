@@ -60,7 +60,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.addCookie(createRepoCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
 
-        response.sendRedirect("http://localhost:9282/");
+        response.sendRedirect("http://localhost:9282/auth-ok");
 
     }
 
@@ -69,19 +69,21 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         LocalDateTime date = now().plus(expireMs, ChronoUnit.MILLIS);
 
         Optional<RefreshEntity> exist = refreshRepository.findByUsername(username);
+        log.info("success filter");
+        RefreshEntity refreshEntity = null;
         if (exist.isEmpty()) {
 
-            RefreshEntity refreshEntity = new RefreshEntity();
+            refreshEntity = new RefreshEntity();
             refreshEntity.setUsername(username);
-            refreshEntity.setRefresh(refresh);
-            refreshEntity.setExpiration(date.toString());
-            refreshRepository.save(refreshEntity);
+
         } else {
-            RefreshEntity refreshEntity = exist.get();
+
+            refreshEntity = exist.get();
             refreshEntity.setRefresh(refresh);
+
+        }
             refreshEntity.setExpiration(date.toString());
             refreshRepository.save(refreshEntity);
-        }
     }
 
     private Cookie createRepoCookie(String key, String value) {

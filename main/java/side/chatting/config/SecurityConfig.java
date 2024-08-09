@@ -2,6 +2,7 @@ package side.chatting.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,7 +44,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
-        return web -> web.ignoring().requestMatchers("/img/**", "/css/**", "/js/**");
+        return web -> web.ignoring().requestMatchers("/images/**", "/css/**", "/js/**");
     }//해당 경로 FilterChain 맵핑 제외 Filter를 거치지 않도록
 
 
@@ -66,8 +67,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/user").authenticated()
+                        .requestMatchers("/user","/").authenticated()
                         .anyRequest().permitAll());
+
 
 
         http    //cors : 교차 리소스 공유  설정  securityConfig 랑 WebMvcConfigurer 구현체로 두번 설정해야함

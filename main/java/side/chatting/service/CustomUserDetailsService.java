@@ -9,6 +9,8 @@ import side.chatting.dto.CustomUser;
 import side.chatting.entity.Member;
 import side.chatting.repository.MemberRepository;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
@@ -16,9 +18,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member userData = memberRepository.findMemberWithAuth(username);
-        if (userData != null) {
-            return new CustomUser(userData, false);
+        Optional<Member> userData = memberRepository.findMemberWithAuth(username);
+        if (userData.isPresent()) {
+            return new CustomUser(userData.get(), false);
         }
         throw new UsernameNotFoundException("아이디가 존재하지 않습니다.");
     }

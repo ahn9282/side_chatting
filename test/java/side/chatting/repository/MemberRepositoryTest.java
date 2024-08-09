@@ -70,7 +70,7 @@ class MemberRepositoryTest {
     @Test
     void testGetMemberWithAuth(){
 
-        Member result1 = memberRepository.findMemberWithAuth("test1");
+        Member result1 = memberRepository.findMemberWithAuth("test1").get();
 
 
         assertThat(result1.getUsername()).isEqualTo("test1");

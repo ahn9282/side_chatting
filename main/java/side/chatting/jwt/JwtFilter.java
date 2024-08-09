@@ -6,7 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,38 +18,42 @@ import side.chatting.entity.Role;
 import side.chatting.repository.AuthRepository;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Set;
 
 @Slf4j//jwt 검증필터 구현
-@RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
+    private final static Set<String> set = Set.of("/");
     private final JwtUtil jwtUtil;
     private final AuthRepository authRepository;
+
+    public JwtFilter(JwtUtil jwtUtil, AuthRepository authRepository) {
+        this.jwtUtil = jwtUtil;
+        this.authRepository = authRepository;
+    }
 
     @Transactional(readOnly = true)
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String accessToken = request.getHeader("access");
+            log.info("요청 URI : {}, 엑세스 토큰 : {}, Method : {}", request.getRequestURI(),  accessToken, request.getMethod());
 
-        if (accessToken == null) {
-            filterChain.doFilter(request, response);
-            return;
+        if (accessToken == null ) {
+                filterChain.doFilter(request, response);
+                return;
         }
+
         String category = jwtUtil.getCategory(accessToken);
 
         if (!category.equals("access")) {
-            log.info("category != access");
-            PrintWriter writer = response.getWriter();
-            writer.print("invalid access token");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
-        try{
+        try {
             jwtUtil.isExpired(accessToken);
-        }catch(ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             String refresh = null;
             Cookie[] cookies = request.getCookies();
             for (Cookie cookie : cookies) {
@@ -64,9 +67,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
-            try{
+            try {
                 jwtUtil.isExpired(refresh);
-            }catch(ExpiredJwtException  e2){
+            } catch (ExpiredJwtException e2) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
@@ -78,8 +81,8 @@ public class JwtFilter extends OncePerRequestFilter {
         String role = jwtUtil.getRole(accessToken);
         String name = jwtUtil.getName(accessToken);
 
-      Auth auth = new Auth();
-      auth.setAuth(Role.USER);
+        Auth auth = new Auth();
+        auth.setAuth(Role.USER);
 
         Member member = new Member();
         member.setUsername(username);
@@ -92,6 +95,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 new UsernamePasswordAuthenticationToken(customUser, null, customUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
         response.setHeader(jwtUtil.HEADER_STRING, accessToken);
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 }

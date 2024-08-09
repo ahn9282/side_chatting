@@ -17,8 +17,8 @@ public class ChatRoom extends BaseTime{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany(mappedBy = "chatRooms")
-    private Set<Member> members;
+    @OneToMany(mappedBy = "chatRoom",cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ChatMember> chatMemberSet = new HashSet<>();
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MessageEntity> messages = new ArrayList<>();

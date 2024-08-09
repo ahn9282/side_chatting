@@ -37,14 +37,17 @@
     </style>
 </head>
 <body>
-    <h2 id="join_title" class="d-flex align-items-center mb-5"><span style="margin-left:15%;color:white;font-weight:bold;">회원 가입</span></h2>
+<h2 id="join_title" class="d-flex align-items-center mb-5"><span style="margin-left:15%;color:white;font-weight:bold;">회원 가입</span>
+</h2>
 <div class="container">
     <form id="signupForm">
         <div class="form-group">
             <label for="username">아이디:</label>
             <div class="d-flex">
                 <input type="text" id="username" class="form-control" placeholder="아이디 입력" required>
-                <button type="button" class="btn btn-primary ms-2" style="width:100px;" onclick="checkUsername()">중복 확인</button>
+                <button type="button" class="btn btn-primary ms-2" style="width:100px;" onclick="checkUsername()">중복
+                    확인
+                </button>
             </div>
             <small id="usernameFeedback" class="form-control-feedback"></small>
         </div>
@@ -62,14 +65,21 @@
 
         <div class="form-group">
             <label for="nickname">닉네임:</label>
+            <div class="d-flex">
+
             <input type="text" id="nickname" class="form-control" placeholder="닉네임 입력" required>
+            <button type="button" class="btn btn-primary ms-2" style="width:100px;" onclick="checkNickName()">중복 확인
+            </button>
+            </div>
+            <small id="nameFeedback" class="form-control-feedback"></small>
         </div>
 
         <div class="form-group">
             <label for="email">이메일:</label>
             <div class="d-flex">
                 <input type="email" id="email" class="form-control" placeholder="이메일 입력" required>
-                <button type="button" class="btn btn-primary ms-2"  style="width:100px;" onclick="checkEmail()">중복 확인</button>
+                <button type="button" class="btn btn-primary ms-2" style="width:100px;" onclick="checkEmail()">중복 확인
+                </button>
             </div>
             <small id="emailFeedback" class="form-control-feedback"></small>
         </div>
@@ -78,71 +88,264 @@
             <label for="verification_code">인증번호:</label>
             <div class="d-flex">
                 <input type="text" id="verification_code" class="form-control" placeholder="인증번호 입력" required>
-                <button type="button" class="btn btn-primary ms-2" style="width:100px;"  onclick="sendVerificationCode()">인증 버튼</button>
+                <button type="button" class="btn btn-primary ms-2" style="width:100px;"
+                        onclick="sendVerificationCode()">인증 버튼
+                </button>
             </div>
             <small id="verificationFeedback" class="form-control-feedback"></small>
         </div>
 
 
-    <div id="btn_page_move" class="d-flex flex-raw justify-content-center " style="margin:1rem;">
+        <div id="btn_page_move" class="d-flex flex-raw justify-content-center " style="margin:1rem;">
 
-        <button type="submit" class="btn btn-success m-2">회원 가입</button>
-        <button type="button" class="btn btn-dark m-2" onclick="cancel()">취소</button>
-    </div>
+            <button type="button" id="sign_up_btn" class="btn btn-success m-2">회원 가입</button>
+            <button type="button" class="btn btn-dark m-2" onclick="cancel()">취소</button>
+        </div>
     </form>
 </div>
 
 <script>
-    function checkUsername() {
-        var username = document.getElementById('username').value;
-        // 서버에서 아이디 중복 확인 로직 호출
-        console.log('Checking username: ' + username);
-        // 여기에 실제 중복 확인 로직을 추가하세요.
+    
+    let email_authNim = "";
+
+    class JoinForm {
+    name;
+    username;
+    password;
+    email;
+    email_auth;
+    pw_equal;
+    constructor(){
+        this.name = null;
+        this.username = null;
+        this.password = null;
+        this.email = null;
+        this.email_auth = false;
+        this.pw_equal =false;
+    }
+
+    get name() {
+        return this._name;
+    }
+
+    set name(value) {
+
+            this._name = value;
+
+    }
+
+    get username() {
+        return this._username;
+    }
+
+    set username(value) {
+  
+            this._username = value;
+    }
+
+    get password() {
+        return this._password;
+    }
+
+    set password(value) {
+    
+            this._password = value;
+  
+    }
+
+    get email() {
+        return this._email;
+    }
+
+    set email(value) {
+            this._email = value;  
+    }
+    get email_auth() {
+        return this._email_auth;
+    }
+
+    set email_auth(value) {
+            this._email_auth = value;  
+    }
+    get pw_equal() {
+        return this._pw_equal;
+    }
+
+    set pw_equal(value) {
+            this._pw_equal = value;  
+    }
+
+}
+const form = new JoinForm();
+
+let validationEmail = (email) =>{
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailPattern.test(email)){
+            alert("올바른 이메일 형식으로 입력해주세요.");
+    }
+}
+
+let checkNickName = () => {
+    $("#nameFeedback").text("");
+    let inputName = $("#nickname").val();
+    if(inputName.length <2){
+        alert("2글자 이상 적어주세요.");
+        return false;
+    }
+     $.ajax({
+            type: 'GET',
+            url: '/member/name/check',
+            data: { name: inputName },
+            success: function(response, status, xhr) {
+            console.log("you can use this Id!!");
+            form.name=inputName;
+             $("#nameFeedback").text("사용 가능한 닉네임입니다.").css("color","blue");
+            },
+            error: function(xhr, status, error) {
+            if(xhr.status === 400){
+                $("#nameFeedback").text("이미 존재하는 닉네임입니다.").css("color","red");
+            }
+            }
+            });
+    }
+
+    let checkUsername = () => {
+    $("#usernameFeedback").text("");
+    let inputId = $("#username").val();
+    if(inputId.length <6){
+        alert("6글자 이상 적어주세요.");
+        return false;
+    }
+     $.ajax({
+            type: 'GET',
+            url: '/member/username/check',
+            data: { user: inputId },
+            success: function(response, status, xhr) {
+                form.username = inputId;
+            console.log("you can use this Id!!");
+             $("#usernameFeedback").text("사용 가능한 아이디입니다.").css("color","blue");
+            },
+            error: function(xhr, status, error) {
+            if(xhr.status === 400){
+                $("#usernameFeedback").text("이미 존재하는 아이디입니다.").css("color","red");
+            }
+            }
+            });
     }
 
     function checkEmail() {
-        var email = document.getElementById('email').value;
-        // 서버에서 이메일 중복 확인 로직 호출
-        console.log('Checking email: ' + email);
-        // 여기에 실제 중복 확인 로직을 추가하세요.
+        let emailInput = $("#email").val();
+      
+        validationEmail(emailInput);
+
+        $("#emailFeedback").text("");
+        $.ajax({
+            type: 'GET',
+            url: '/member/email/check',
+            data: { email: emailInput },
+            success: function(response, status, xhr) {
+                if (xhr.status === 200) {
+                    form.email = emailInput;
+                console.log("success!! data : " + response);
+                    email_authNim = response;
+                    $("#email").prop("disabled", true);
+                    alert("이메일이 전송되었습니다. \n인증 번호를 입력하여 인증을 끝내주세요.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log(error);
+                if (xhr.status === 400) {
+                    $("#emailFeedback").text(xhr.responseText).css('color', 'red');
+                } else {
+                    console.log("Unexpected error: " + status + " - " + error);
+                }
+            }
+        });
     }
-
-    function sendVerificationCode() {
-        var email = document.getElementById('email').value;
-        // 서버에서 인증 코드 전송 로직 호출
-        console.log('Sending verification code to: ' + email);
-        // 여기에 실제 인증 코드 전송 로직을 추가하세요.
-    }
-
-    document.getElementById('signupForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        // 폼 제출 처리 로직
-        console.log('Form submitted');
-        // 여기에 실제 폼 제출 로직을 추가하세요.
-    });
-
-    document.getElementById('password').addEventListener('input', function() {
-        validatePassword();
-    });
-
-    document.getElementById('confirm_password').addEventListener('input', function() {
-        validatePassword();
-    });
-
-    function validatePassword() {
-        var password = document.getElementById('password').value;
-        var confirmPassword = document.getElementById('confirm_password').value;
-        var feedback = document.getElementById('passwordFeedback');
-
-        if (password !== confirmPassword) {
-            feedback.textContent = '비밀번호가 일치하지 않습니다.';
-        } else {
-            feedback.textContent = '';
+        function sendVerificationCode() {
+            let verification_code = $("#verification_code").val();
+            if (verification_code === email_authNim) {
+                $("#emailFeedback").text("인증이 완료되었습니다.").css({"color":"blue"});
+                form.email_auth = true;
+            } else {
+                $("#emailFeedback").text("잘못된 인증번호입니다.").css({"color":"red"});
+            }
         }
-    }
-    let cancel = () =? {
-    window.location.href="/";
-    }
+
+         document.getElementById('sign_up_btn').addEventListener('click', function(event) {
+             event.preventDefault();
+            validForm(form);
+            join_us(form);
+         });
+
+         document.getElementById('password').addEventListener('input', function() {
+             validatePassword();
+         });
+
+         document.getElementById('confirm_password').addEventListener('input', function() {
+             validatePassword();
+         });
+
+         function validatePassword() {
+             let password = document.getElementById('password').value;
+             let confirmPassword = document.getElementById('confirm_password').value;
+             let feedback = document.getElementById('passwordFeedback');
+             if (password !== confirmPassword) {
+                 feedback.textContent = '비밀번호가 일치하지 않습니다.';
+             } else {
+                 feedback.textContent = '';
+                 form.pw_equal = true;
+                 form.password = password;
+             }
+         }
+         let cancel = () => {
+         window.location.href="/";
+         }
+         const validForm = (form) => {
+            
+            if(form.username === null){
+                alert("id 인증 필요");
+            }
+           else if(form.name === null){
+                alert("name 인증 필요");
+            }
+            else if(form.email === null){
+                alert("email 없음");
+            }
+            else  if(form.password === null){
+                alert("pw 없음");
+            }
+            else if(!form.email_auth){
+                alert("이메일 인증 필요");
+            }
+            else if(!form.pw_equal){
+                alert("비번 다름");
+            }
+         }
+         let join_us = (form) =>{
+            $.ajax({
+                type: 'post',
+            url: '/member/join-us',
+            data: JSON.stringify({
+                name:form.name,
+                username:form.username,
+                password:form.password,
+                email:form.email
+            }),
+            dataType:"json",
+            contentType: "application/json",
+            success: function(response, status, xhr) {
+                if (xhr.status === 200) {
+                console.log("join! : " + response);
+                    alert("회원 가입이 정상적으로 이뤄졌습니다.. \n 로그인 화면으로 넘어갑니다.");
+                    window.location.href="/login";
+                }
+            },
+            error: function(xhr, status, error) {
+
+            }
+            });
+         }
 </script>
 </body>
 </html>

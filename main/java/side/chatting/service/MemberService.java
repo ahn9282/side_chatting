@@ -1,20 +1,33 @@
 package side.chatting.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import side.chatting.controller.MemberApiController;
+import side.chatting.dto.JoinForm;
 import side.chatting.dto.MemberDto;
+import side.chatting.entity.Member;
 import side.chatting.repository.AuthRepository;
 import side.chatting.repository.MemberRepository;
+
+import java.util.Optional;
 
 
 public interface MemberService {
 
 
-    MemberDto joinMember(MemberDto form);
+    MemberDto joinMember(JoinForm form);
 
-    Boolean checkDupleUsername(MemberDto form);
+    Boolean checkDupleUsername(String id);
 
-    Boolean checkDupleName(MemberDto form);
+    Boolean checkDupleName(String name);
 
-    Boolean checkDupleEmail(String email);
+    Optional<Member> checkDupleEmail(String email);
+
+    String findPassWordProcess(String username);
+
+
 }
