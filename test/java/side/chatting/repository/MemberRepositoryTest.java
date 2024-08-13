@@ -6,11 +6,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import side.chatting.entity.Auth;
-import side.chatting.entity.Member;
-import side.chatting.entity.Role;
+import side.chatting.dto.ChatPageDto;
+import side.chatting.entity.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -27,6 +31,7 @@ class MemberRepositoryTest {
     PasswordEncoder passwordEncoder;
     @Autowired
     AuthRepository authRepository;
+
 
     @Test
     void joinTest(){
@@ -78,5 +83,31 @@ class MemberRepositoryTest {
 
     }
 
+    @Test
+    void mainPageDataTest() {
+        Set<Member> results = memberRepository.withFriends(1L);
+        log.info("result : {}", results);
+    }
+    @Test
+    void mainPageDataTest2() {
+        String username = "test1";
+        Optional<Member> findMember = memberRepository.findByUsername(username);
+        assertThat(findMember.isPresent()).isTrue();
+        assertThat(findMember.isEmpty()).isFalse();
+        Member member = findMember.get();
+        Set<ChatMember> chatMemberSet = member.getChatMemberSet();
+        Set<FriendShip> friendsAsMember = member.getFriendsAsFriend();
+        log.info("chatRoomMember: {}", chatMemberSet);
+        log.info("friends : {}", friendsAsMember);
+
+    }
+
+    @Test
+    void mainPageDataTest3() {
+
+
+        Set<Member> result = memberRepository.withFriends(1L);
+        log.info("result test : {}", result);
+    }
 
 }

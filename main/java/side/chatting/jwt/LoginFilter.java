@@ -80,14 +80,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String username = user.isOauth() ? user.getEmail() : user.getUsername();
         String name = user.getName();
         String email = user.getEmail();
+        Long id = user.getMemberId();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String access = jwtUtil.createJwt(jwtUtil.HEADER_STRING, username, role,name, jwtUtil.ACCESS_EXPIRATION);
-        String refresh = jwtUtil.createJwt(jwtUtil.COOKIE_REFRESH, username, role,name, jwtUtil.REFRESH_EXPIRATION);
+        String access = jwtUtil.createJwt(jwtUtil.HEADER_STRING, id, username, role,name, jwtUtil.ACCESS_EXPIRATION);
+        String refresh = jwtUtil.createJwt(jwtUtil.COOKIE_REFRESH, id, username, role,name, jwtUtil.REFRESH_EXPIRATION);
 
         addRefreshEntity(username, refresh, jwtUtil.REFRESH_EXPIRATION);
 

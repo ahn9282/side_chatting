@@ -1,6 +1,8 @@
 package side.chatting.dto;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -12,28 +14,26 @@ import java.util.Collection;
 import java.util.Map;
 
 @EqualsAndHashCode(of={"username"})
+@ToString
 public class CustomUser implements UserDetails, OAuth2User {
 
-    private final Member member;
+    @Getter
+    private Long memberId;
     private String username;
+    private String password;
+    @Getter
     private String email;
+    @Getter
     private String name;
     private boolean isOauth;
     private Role role;
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public CustomUser(Member member, boolean isOauth2) {
-        this.member = member;
         this.username = member.getUsername();
         this.name = member.getName();
         this.isOauth = isOauth2;
+        this.memberId = member.getId();
+        this.password = member.getPassword();
         this.role = member.getAuth().getAuth();
     }
 
@@ -63,7 +63,7 @@ public class CustomUser implements UserDetails, OAuth2User {
 
     @Override
     public String getPassword() {
-        return member.getPassword();
+        return password;
     }
 
     @Override

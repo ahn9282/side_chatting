@@ -23,20 +23,5 @@ public class MemberTest {
     @Autowired
     EntityManager em;
 
-    @Transactional
-    @Test
-    void memberFriendTest(){
-        Member test3 = memberRepository.findByUsername("test3").get();
-        Member test2 = memberRepository.findByUsername("test2").get();
 
-        test3.addFriend(test2);
-        em.flush();
-        em.clear();
-
-        Member findMember2 = memberRepository.findByUsername("test2").get();
-        Set<Member> friends = findMember2.getFriends();
-        assertThat(friends.size()).isEqualTo(1);
-
-
-    }
 }

@@ -80,6 +80,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String username = jwtUtil.getUsername(accessToken);
         String role = jwtUtil.getRole(accessToken);
         String name = jwtUtil.getName(accessToken);
+        Long id = jwtUtil.getMemberId(accessToken);
 
         Auth auth = new Auth();
         auth.setAuth(Role.USER);
@@ -88,11 +89,13 @@ public class JwtFilter extends OncePerRequestFilter {
         member.setUsername(username);
         member.setAuth(auth);
         member.setName(name);
+        member.setId(id);
 
         CustomUser customUser = new CustomUser(member, false);
 
+        log.info("Login Member : {}", member);
         UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(customUser, null, customUser.getAuthorities());
+                new UsernamePasswordAuthenticationToken(customUser, true, customUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
         response.setHeader(jwtUtil.HEADER_STRING, accessToken);
         filterChain.doFilter(request, response);

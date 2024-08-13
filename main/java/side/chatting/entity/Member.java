@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Indexed;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -93,5 +92,9 @@ public class Member extends BaseTime{
 
     public void log() {
         log.info("Member [ username : {}, name : {}, email : {}]", username, name, email);
+    }
+    @Override
+    public String toString(){
+        return "Member >> ID : " + this.username + ", name : " + this.name;
     }
 }

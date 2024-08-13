@@ -11,15 +11,16 @@ import side.chatting.entity.Member;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberDto {
+    private Long id;
     private String username;
     private String name;
     private Grade grade;
-    private String password;
     private String profile;
     private String description;
     private String email;
 
     public MemberDto(Member member) {
+        this.id = member.getId();
         this.username = member.getUsername();
         this.name = member.getName();
         this.grade = member.getGrade();

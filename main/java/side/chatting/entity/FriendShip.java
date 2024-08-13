@@ -14,11 +14,16 @@ public class FriendShip {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="member_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="friend_id")
+    @JoinColumn(name = "friend_id")
     private Member friend;
+
+    @Override
+    public String toString(){
+        return "member : " + member.getUsername() + "friend : " + friend.getUsername();
+    }
 }

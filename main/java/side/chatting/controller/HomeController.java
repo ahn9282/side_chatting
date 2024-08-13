@@ -39,9 +39,11 @@ public class HomeController {
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<?> loginProcess(LoginForm form) {
-
-
-        return null;
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body("Success");
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fail");
+        }
 
     }
 

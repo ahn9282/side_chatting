@@ -26,7 +26,10 @@ public class JwtUtil {
         byte[] byteSecretKey = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(byteSecretKey);
     }
-
+    public Long getMemberId(String token) {
+        return Jwts.parserBuilder().setSigningKey(key)
+                .build().parseClaimsJws(token).getBody().get("id", Long.class);
+    }
     public String getUsername(String token) {
         return Jwts.parserBuilder().setSigningKey(key)
                 .build().parseClaimsJws(token).getBody().get("username", String.class);
@@ -51,9 +54,10 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("category", String.class);
     }
 
-        public String createJwt(String category, String username, String role,String name, Long expireMs) {
+        public String createJwt(String category, Long id, String username, String role,String name, Long expireMs) {
         return Jwts.builder()
                 .claim("category", category)
+                .claim("id", id)
                 .claim("username", username)
                 .claim("role", role)
                 .claim("name", name)
