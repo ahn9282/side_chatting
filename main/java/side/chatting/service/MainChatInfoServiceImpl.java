@@ -7,6 +7,7 @@ import side.chatting.dto.ChatRoomDto;
 import side.chatting.entity.Member;
 import side.chatting.repository.MemberRepository;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -22,7 +23,7 @@ public class MainChatInfoServiceImpl implements MainChatInfoService {
         @Override
         public ChatPageDto mainPageInfoP(Long id, Integer pageNum) {
             if(pageNum == null) pageNum = 1;
-            Set<Member> friends = memberRepository.withFriends(id);
+            List<Member> friends = memberRepository.withFriends(id);
             Slice<ChatRoomDto> chatRooms = memberRepository.chatRoomPagingSlice(id, pageNum);
             return new ChatPageDto(id, friends, chatRooms);
 

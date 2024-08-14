@@ -85,7 +85,7 @@ class MemberRepositoryTest {
 
     @Test
     void mainPageDataTest() {
-        Set<Member> results = memberRepository.withFriends(1L);
+        List<Member> results = memberRepository.withFriends(1L);
         log.info("result : {}", results);
     }
     @Test
@@ -106,7 +106,7 @@ class MemberRepositoryTest {
     void mainPageDataTest3() {
 
 
-        Set<Member> result = memberRepository.withFriends(1L);
+        List<Member> result = memberRepository.withFriends(1L);
         log.info("result test : {}", result);
     }
 

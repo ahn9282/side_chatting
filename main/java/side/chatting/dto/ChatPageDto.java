@@ -17,12 +17,12 @@ public class ChatPageDto {
 
     private MemberDto member;
     private Slice<ChatRoomDto> chatRooms;
-    private Set<MemberDto> friends;
+    private List<MemberDto> friends;
 
     public ChatPageDto() {
     }
 
-    public ChatPageDto(Long id, Set<Member> friends, Slice<ChatRoomDto> chatRooms) {
+    public ChatPageDto(Long id, List<Member> friends, Slice<ChatRoomDto> chatRooms) {
         this.friends = friends.stream()
                 .map(MemberDto::new)
                 .peek(dto -> {
@@ -32,7 +32,7 @@ public class ChatPageDto {
                     }
                 })
                 .filter(dto -> !dto.getId().equals(id))
-                .collect(Collectors.toSet());
+                .toList();
         this.chatRooms = chatRooms;
     }
 

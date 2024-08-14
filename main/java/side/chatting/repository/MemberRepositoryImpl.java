@@ -30,13 +30,13 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public Set<Member> withFriends(Long id) {
-       return new HashSet<>(jpaQueryFactory
-                .select(member)
+    public List<Member> withFriends(Long id) {
+       return jpaQueryFactory
+                .selectDistinct(member)
                 .from(friendShip)
                .innerJoin(member).on(friendShip.member.id.eq(id).or(friendShip.friend.id.eq(id)))
                 .groupBy(member.id)
-               .fetch());
+               .fetch();
     }
 
     @Override

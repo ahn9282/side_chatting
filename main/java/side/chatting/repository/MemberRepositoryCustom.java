@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface MemberRepositoryCustom {
-    Set<Member> withFriends(Long id);
+    List<Member> withFriends(Long id);
 
     Slice<ChatRoomDto> chatRoomPagingSlice(Long id, Integer pageNum);
 
