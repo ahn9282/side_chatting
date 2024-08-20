@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import side.chatting.dto.ChatPageDto;
+import side.chatting.dto.ChatRoomDto;
 import side.chatting.entity.*;
 
 import java.util.List;
@@ -108,6 +110,23 @@ class MemberRepositoryTest {
 
         List<Member> result = memberRepository.withFriends(1L);
         log.info("result test : {}", result);
+    }
+
+    @Test
+    void testGetChatroomPagingOver(){
+        Slice<ChatRoomDto> result = memberRepository.chatRoomPagingSlice(1L, 3);
+        assertThat(result.hasContent()).isFalse();
+        assertThat(result.hasNext()).isFalse();
+        assertThat(result.isFirst()).isFalse();
+        assertThat(result.isLast()).isTrue();
+        assertThat(result.getContent().isEmpty()).isTrue();
+    }
+
+    @Test
+    void jpqlTest(){
+        List resultJPQL = em.createQuery("select m from Member m where username like :username || '%'").setParameter("username", "test").getResultList();
+        assertThat(resultJPQL).isNotNull();
+        assertThat(resultJPQL).extracting("username").containsExactly("test1", "test2", "test3", "test4");
     }
 
 }
