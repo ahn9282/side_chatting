@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import side.chatting.dto.CustomUser;
+import side.chatting.entity.Refresh;
 import side.chatting.entity.RefreshEntity;
 import side.chatting.jwt.JwtUtil;
 import side.chatting.repository.RefreshRepository;
@@ -69,18 +70,18 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private void addRefreshEntity(String username, String refresh, Long expireMs) {
         LocalDateTime date = now().plus(expireMs, ChronoUnit.MILLIS);
 
-        Optional<RefreshEntity> exist = refreshRepository.findByUsername(username);
+        Optional<Refresh> exist = refreshRepository.findByUsername(username);
         log.info("success filter");
-        RefreshEntity refreshEntity = null;
+        Refresh refreshEntity = null;
         if (exist.isEmpty()) {
 
-            refreshEntity = new RefreshEntity();
+            refreshEntity = new Refresh();
             refreshEntity.setUsername(username);
 
         } else {
 
             refreshEntity = exist.get();
-            refreshEntity.setRefresh(refresh);
+            refreshEntity.setToken(refresh);
 
         }
             refreshEntity.setExpiration(date.toString());

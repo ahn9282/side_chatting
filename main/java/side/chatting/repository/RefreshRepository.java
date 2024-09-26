@@ -1,18 +1,23 @@
 package side.chatting.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
+import side.chatting.entity.Refresh;
 import side.chatting.entity.RefreshEntity;
 
 import java.util.Optional;
 
-public interface RefreshRepository extends JpaRepository<RefreshEntity, Long> {
+public interface RefreshRepository extends CrudRepository<Refresh, String> {
 
-    Boolean existsByRefresh(String refresh);
+    Boolean existsByToken(String token);
+
 
     @Transactional
-    void deleteByRefresh(String refresh);
+    void deleteByToken(String token);
 
-    Optional<RefreshEntity> findByUsername(String username);
+
+    Optional<Refresh> findByUsername(String username);
+
 }
 

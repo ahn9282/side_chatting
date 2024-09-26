@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.transaction.annotation.Transactional;
 import side.chatting.dto.CustomUser;
+import side.chatting.entity.Refresh;
 import side.chatting.entity.RefreshEntity;
 import side.chatting.repository.RefreshRepository;
 import side.chatting.security.CustomAuthenticationFailureHandler;
@@ -111,17 +112,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         LocalDateTime date = now().plus(expireMs, ChronoUnit.MILLIS);
 
         log.info("로그인 필터");
-        Optional<RefreshEntity> exist = refreshRepository.findByUsername(username);
+        Optional<Refresh> exist = refreshRepository.findByUsername(username);
         if (exist.isEmpty()) {
 
-            RefreshEntity refreshEntity = new RefreshEntity();
+            Refresh refreshEntity = new Refresh();
             refreshEntity.setUsername(username);
-            refreshEntity.setRefresh(refresh);
+            refreshEntity.setToken(refresh);
             refreshEntity.setExpiration(date.toString());
             refreshRepository.save(refreshEntity);
         } else {
-            RefreshEntity refreshEntity = exist.get();
-            refreshEntity.setRefresh(refresh);
+            Refresh refreshEntity = exist.get();
+            refreshEntity.setToken(refresh);
             refreshEntity.setExpiration(date.toString());
             refreshRepository.save(refreshEntity);
         }
