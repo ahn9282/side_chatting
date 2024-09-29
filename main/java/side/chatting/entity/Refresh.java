@@ -14,7 +14,6 @@ import org.springframework.data.redis.core.index.Indexed;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @RedisHash("refresh_token")
 public class Refresh {
-;
 
     @Id
     private String id;
